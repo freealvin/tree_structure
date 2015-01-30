@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+/**********************************************http://c.biancheng.net/cpp/u/shuju/************/
 
 /*
 * @brief : 二叉树结构体声明
