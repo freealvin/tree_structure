@@ -48,6 +48,31 @@ int getHeight(node *tree){
 }
 
 /*
+* @brief : 检测树是否平衡
+* @author : alvin
+* @date : 2015/1/30 16:24
+* @version : ver 1.0
+* @inparam : 
+* @outparam : 
+*/
+int checkValid(node *tree)
+{
+	int left = getHeight(tree->left);
+	int right = getHeight(tree->right);
+	if(left-right>1||right-left>1)
+		return 0;
+	else
+		return 1;
+
+}
+
+void balance(node *true)
+{
+	/*http://www.cppblog.com/cxiaojia/archive/2012/08/20/187776.html**/
+	printf("need to do something here\n");
+}
+
+/*
 * @brief : 向二叉树里插入一个值
 * @author : alvin
 * @date : 2015/1/30 10:17
@@ -64,12 +89,13 @@ void insert(node **tree, int val)
 		temp->left = temp->right = NULL;
 		temp->data = val;
 		*tree = temp;
-		return;
+
 	}
 
 	if(val < (*tree)->data)
 	{
 		insert(&((*tree)->left), val);
+
 	}
 
 	else if(val > (*tree)->data)
@@ -314,6 +340,14 @@ int main()
 	for(i=0; i<n; i++)
 	{
 		insert(&tree, arr[i]);
+		if(checkValid(tree))
+		{
+			printf("插入值%d后，树仍旧平衡\n", arr[i]);
+		}else
+		{
+			printf("插入值%d后，树已经不平衡\n", arr[i]);
+			balance(tree);
+		}
 	}
 
 	in_print(tree);
