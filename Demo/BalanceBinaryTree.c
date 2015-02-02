@@ -49,7 +49,21 @@ int getHeight(node *tree){
 
 }
 
-//左左
+// 左左
+/*                     8                         6
+*                     / \                       / \
+*                    6   9       =>            4   8
+*                   / \                       /   / \
+*                  4   7                     2   7   9
+*                 /
+*                2
+*                      8                        6
+*                     /                        / \
+*                    6       =>               4   8
+*                   /
+*                  4
+* 
+*/
 node *DealLL(node *tree)
 {
 	node *temp = tree->left;
@@ -62,6 +76,7 @@ node *DealLL(node *tree)
 }
 
 //右右
+
 node *DealRR(node *tree)
 {
 	node *temp = tree->right;
@@ -70,7 +85,22 @@ node *DealRR(node *tree)
 	return temp;
 }
 
-
+//左右
+/*                     4                         6
+*                     / \                       / \
+*                    2   6       =>            4   8
+*                       / \                   / \   \
+*                      5   8                 2   5   9
+*                           \
+*                            9
+*                
+*                  4                            6
+*                   \                          / \
+*                    6       =>               4   8
+*                     \
+*                      8
+* 
+*/
 node *DealLR(node *tree)
 {
 	//to LL
@@ -83,6 +113,7 @@ node *DealLR(node *tree)
 	return DealLL(tree);
 }
 
+//右左
 node *DealRL(node *tree)
 {
 	//to RR
@@ -124,7 +155,7 @@ int checkValid(node *tree)
 
 
 /*
-* @brief : 向二叉树里插入一个值
+* @brief : 向平衡二叉树里插入一个值
 * @author : alvin
 * @date : 2015/1/30 10:17
 * @version : ver 1.0
@@ -175,7 +206,7 @@ node *insert(node **tree, int val)
 		}
 
 		return newNode;
-	}else
+	}else //不处理值已经存在的数据
 	{
 		NULL;
 	}
@@ -439,18 +470,6 @@ int main()
 	{
 		temp = insert(&tree, arr[i]);
 		printf("new node address:%p\n", temp);
-		
-		/*
-		if(checkValid(tree))
-		{
-			printf("插入值%d后，树仍旧平衡\n", arr[i]);
-		}else
-		{
-			printf("插入值%d后，树已经不平衡\n", arr[i]);
-			
-			tree = balance(tree, temp);
-			pre_print(tree);
-		}*/
 		pre_print(tree);
 	}
 
