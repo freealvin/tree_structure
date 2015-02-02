@@ -13,6 +13,7 @@
 struct bin_tree{
 	int data;
 	struct bin_tree *right, *left;
+	int height;
 };
 
 typedef struct bin_tree node;
@@ -48,6 +49,52 @@ int getHeight(node *tree){
 
 }
 
+//左左
+node *DealLL(node *tree)
+{
+	node *temp = tree->left;
+	tree->left = temp->right;
+	temp->right = tree;
+
+	//tree->height -= 1;
+	
+	return temp;
+}
+
+//右右
+node *DealRR(node *tree)
+{
+	node *temp = tree->right;
+	tree->right = temp->left;
+	temp->left = tree;
+	return temp;
+}
+
+
+node *DealLR(node *tree)
+{
+	//to LL
+	node *temp = tree->left->right;
+	tree->left->right = temp->left;
+	temp->left = tree->left;
+	tree->left = temp;
+
+	//DealLR
+	return DealLL(tree);
+}
+
+node *DealRL(node *tree)
+{
+	//to RR
+	node *temp = tree->right->left;
+	tree->right->left = temp->right;
+	temp->right = tree->right;
+	tree->right = temp;
+
+	//DealRR
+	return DealRR(tree);
+}
+
 /*
 * @brief : 检测树是否平衡
 * @author : alvin
@@ -58,20 +105,23 @@ int getHeight(node *tree){
 */
 int checkValid(node *tree)
 {
-	int left = getHeight(tree->left);
-	int right = getHeight(tree->right);
-	if(left-right>1||right-left>1)
-		return 0;
-	else
+	if(tree==NULL)
 		return 1;
+	else
+	{
+
+		int left = getHeight(tree->left);
+		int right = getHeight(tree->right);
+		if(left-right>1||right-left>1)
+			return 0;
+		else
+			return 1;
+
+	}
 
 }
 
-void balance(node *true)
-{
-	/*http://www.cppblog.com/cxiaojia/archive/2012/08/20/187776.html**/
-	printf("need to do something here\n");
-}
+
 
 /*
 * @brief : 向二叉树里插入一个值
@@ -81,7 +131,8 @@ void balance(node *true)
 * @inparam : 
 * @outparam : 
 */
-void insert(node **tree, int val)
+
+node *insert(node **tree, int val)
 {
 	node *temp = NULL;
 	if(!(*tree))
@@ -90,21 +141,58 @@ void insert(node **tree, int val)
 		temp->left = temp->right = NULL;
 		temp->data = val;
 		*tree = temp;
+		return *tree;
 
 	}
 
 	if(val < (*tree)->data)
 	{
-		insert(&((*tree)->left), val);
+		node *newNode = insert(&((*tree)->left), val);
+		if(!checkValid(*tree))
+		{
+			if ((*tree)->left->data> val)
+			{
+				*tree = DealLL(*tree);
+			}else{
+				*tree = DealLR(*tree);
+			}
+		}
 
+		return newNode;
 	}
 
 	else if(val > (*tree)->data)
 	{
-		insert(&((*tree)->right), val);
+		node *newNode = insert(&((*tree)->right), val);
+		if(!checkValid(*tree))
+		{
+			if ((*tree)->right->data < val)
+			{
+				*tree = DealRR(*tree);
+			}else{
+				*tree = DealRL(*tree);
+			}
+		}
+
+		return newNode;
+	}else
+	{
+		NULL;
 	}
 
 }
+
+
+
+//插入后
+//左侧比右侧高度大2
+//		1）插入结点在左侧的左子树上
+//		2) 新结点在左侧的右子树上
+//右侧比左侧高度大2
+//		1）新结点在右侧的左子树上
+//		2）新结点在右侧的子树上
+//
+
 
 /*
 * @brief : 在二叉树中查找节点值为val的结点并反回结点的地址
@@ -273,7 +361,16 @@ void in_print(node *tree)
 	if(tree)
 	{
 		in_print(tree->left);
-		printf("data: %d, height:%d\n", tree->data, getHeight(tree));
+		printf("address:%p, data: %d, height:%d\n", tree, tree->data, getHeight(tree));
+		/*if(tree->left!=NULL)
+		{
+			printf("left address:%p\n", tree->left);
+		}
+
+		if(tree->right!=NULL)
+		{
+			printf("right address:%p\n", tree->right);
+		}*/
 		in_print(tree->right);
 	}
 }
@@ -334,21 +431,27 @@ void searchRange(node *tree, int min, int max)
 
 int main()
 {
-	node *tree = NULL;
+	node *tree = NULL, *temp;
 	int n = 10;
-	int arr[10] = {8,6, 4,5,7,2, 3,   9, 1, 13};
+	int arr[10] = {9,8,4,5,6,7,2, 3,1, 13};
 	int i;
 	for(i=0; i<n; i++)
 	{
-		insert(&tree, arr[i]);
+		temp = insert(&tree, arr[i]);
+		printf("new node address:%p\n", temp);
+		
+		/*
 		if(checkValid(tree))
 		{
 			printf("插入值%d后，树仍旧平衡\n", arr[i]);
 		}else
 		{
 			printf("插入值%d后，树已经不平衡\n", arr[i]);
-			balance(tree);
-		}
+			
+			tree = balance(tree, temp);
+			pre_print(tree);
+		}*/
+		pre_print(tree);
 	}
 
 	in_print(tree);
