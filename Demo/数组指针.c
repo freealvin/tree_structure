@@ -19,8 +19,8 @@ int main4()
 {
 	int a[5] ={'a','b','c','d', 'e'};
 
-	int (*p1)[3] = &a;
-	int (*p2)[3] = a;
+	int (*p1)[5] = &a;
+	int (*p2)[5] = a;
 	printf("p1=%p\n", p1);
 	printf("p2=%p\n", p2);
 
@@ -58,8 +58,8 @@ int main3()
 {
 	int a[5] ={'a','b','c','d', 'e'};
 
-	int (*p1)[3] = &a;
-	int (*p2)[3] = a;
+	int (*p1)[5] = &a;
+	int (*p2)[5] = a;
 	printf("p1=%p\n", p1);
 	printf("p2=%p\n", p2);
 
