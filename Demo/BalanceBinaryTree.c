@@ -208,7 +208,7 @@ node *insert(node **tree, int val)
 		return newNode;
 	}else //不处理值已经存在的数据
 	{
-		NULL;
+		return NULL;
 	}
 
 }
@@ -460,7 +460,7 @@ void searchRange(node *tree, int min, int max)
 
 
 
-int main()
+int main6()
 {
 	node *tree = NULL, *temp;
 	int n = 10;
