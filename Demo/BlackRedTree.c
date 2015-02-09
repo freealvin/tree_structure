@@ -17,7 +17,7 @@ static void pre_print(RBNode *tree)
 {
 	if(tree)
 	{
-		printf("%d\n", tree->data);
+		printf("value: \t%d, \tcolor:\t%s\n", tree->data, tree->color==0?"red":"black");
 		pre_print(tree->left);
 		pre_print(tree->right);
 	}
@@ -52,6 +52,7 @@ RBNode* uncle(RBNode *node)
 RBNode *RightRoate(RBNode *tree)
 {
 	RBNode *temp = tree->left;
+	printf("以%d为根结点右旋\n",tree->data);
 	if(temp->right!=NULL)
 		temp->right->parent = tree;
 	tree->left = temp->right;
@@ -66,7 +67,9 @@ RBNode *RightRoate(RBNode *tree)
 
 RBNode *LeftRoate(RBNode *tree)
 {
+	
 	RBNode *temp = tree->right;
+	printf("以%d为根结点左旋\n",tree->data);
 	if(temp->left!=NULL)
 		temp->left->parent = tree;
 	tree->right = temp->left;
@@ -91,6 +94,8 @@ void RB_INSERT_FIXUP(RBNode **T, RBNode *z){
 		RBNode *parent  = z->parent;
 		RBNode *u = uncle(z);
 		RBNode *g = grandP(z);
+		RBNode *temp;
+		RBNode *gParent ;//祖父结点的父节点
 
 		//父节点和叔叔结点皆为红色
 		if(u!=NULL&&u->color==0)
@@ -100,45 +105,94 @@ void RB_INSERT_FIXUP(RBNode **T, RBNode *z){
 			g->color = 0;
 			RB_INSERT_FIXUP(T, g);//设祖父结点为当前结点，继续调整
 		}else{//叔叔结点为空或者为黑色
-			if(parent->right == z){//当前结点是父结点的右子结点
-				RBNode *temp = NULL;
-				temp 	 = LeftRoate(parent);
-				//左旋
-				if(g->left == parent){
-					temp->parent = g;
-					g->left = temp;
-					RB_INSERT_FIXUP(T, temp->left);
-				}else{
-					temp->parent = g;
-					g->right = temp;
-					RB_INSERT_FIXUP(T, temp->left);
-				}
-			}else{
-				parent->color = 1;
-				g->color = 0;
-				RBNode *temp = NULL;
-				temp = RightRoate(parent);//保存子树旋转后的根结点
 
-				if(g->parent!=NULL){//判断是不是到根节点了
-					RBNode *gg = g->parent;
-					if(gg->left == g){
-						gg->left = temp;
-						temp->parent = gg;
-					}else{
-						gg->right = temp;
-						temp->parent = gg;
+
+
+			if(parent == g->left){//1. 父结点是祖父结点的左孩子时
+					if(parent->right == z){//a.当前结点是父结点的右子结点：左旋调整到b状态
+						temp = NULL;
+						temp 	 = LeftRoate(parent);
+						//左旋
+						if(g->left == parent){
+							temp->parent = g;
+							g->left = temp;
+							RB_INSERT_FIXUP(T, temp->left);
+						}else{
+							temp->parent = g;
+							g->right = temp;
+							RB_INSERT_FIXUP(T, temp->left);
+						}
+					}else{//b.当前结点是父结点的左子结点：父变黑，祖父变红，右旋即可
+						parent->color = 1;
+						g->color = 0;
+						temp = NULL;
+						gParent = g->parent;//保存祖父结点的父结点
+						temp = RightRoate(g);//保存子树旋转后的根结点
+				
+
+						if(gParent!=NULL){//判断是不是到根节点了
+							if(gParent->left == g){
+								gParent->left = temp;
+								temp->parent = gParent;
+							}else{
+								gParent->right = temp;
+								temp->parent = gParent;
+							}
+
+						}else{
+							*T = temp;
+						}
+					}
+			}else//2.父结点是祖父结点的右孩子时，与父结点是祖父结点的左孩子对称调整
+				{
+					if(z==parent->left){//c).当前结点是父结点的左孩子：先右旋，调整到到d状态
+						//右旋
+						temp = NULL;
+						temp 	 = RightRoate(parent);
+						//左旋
+						if(g->left == parent){
+							temp->parent = g;
+							g->left = temp;
+							RB_INSERT_FIXUP(T, temp->right);
+						}else{
+							temp->parent = g;
+							g->right = temp;
+							RB_INSERT_FIXUP(T, temp->right);
+						}
+
+					}else//d).当前结点是父结点的右孩子：父变黑，祖父变红，左旋
+					{
+						parent->color = 1;
+						g->color = 0;
+						temp = NULL;
+						gParent = g->parent;
+
+						temp = LeftRoate(g);
+
+
+						if(gParent!=NULL){//判断是不是到根节点了
+							if(gParent->left == g){
+								gParent->left = temp;
+								temp->parent = gParent;
+							}else{
+								gParent->right = temp;
+								temp->parent = gParent;
+							}
+
+						}else{
+							*T = temp;
+						}
+
 					}
 
-				}else{
-					*T = temp;
-				}
 			}
+
 		}
 
 	}
 
 
-	*T->color = 1;//根节点涂成黑色
+	(*T)->color = 1;//根节点涂成黑色
 }
 
 
@@ -193,7 +247,7 @@ int main()
 	for(;i<20; i++){
 		RB_INSERT(&root, arr[i]);
 		pre_print(root);
-		printf("********************************************************************");
+		printf("********************************************************************\n");
 	}
 	return 0;
 }

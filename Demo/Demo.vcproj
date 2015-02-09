@@ -183,6 +183,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\BTree.c"
+				>
+			</File>
+			<File
 				RelativePath=".\数组指针.c"
 				>
 			</File>
@@ -192,6 +196,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\BTree.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"
