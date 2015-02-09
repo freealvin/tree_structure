@@ -49,6 +49,14 @@ RBNode* uncle(RBNode *node)
 	return NULL;
 }
 
+/*
+* @brief : 红黑树的右旋
+* @author : alvin
+* @date : 2015/2/9 13:29
+* @version : ver 1.0
+* @inparam : 
+* @outparam :返回右旋后的子树的根结点 
+*/
 RBNode *RightRoate(RBNode *tree)
 {
 	RBNode *temp = tree->left;
@@ -65,6 +73,14 @@ RBNode *RightRoate(RBNode *tree)
 }
 
 
+/*
+* @brief : 红黑树的左旋
+* @author : alvin
+* @date : 2015/2/9 13:28
+* @version : ver 1.0
+* @inparam : 
+* @outparam : 
+*/
 RBNode *LeftRoate(RBNode *tree)
 {
 	
@@ -97,19 +113,20 @@ void RB_INSERT_FIXUP(RBNode **T, RBNode *z){
 		RBNode *temp;
 		RBNode *gParent ;//祖父结点的父节点
 
-		//父节点和叔叔结点皆为红色
+		// 父节点和叔叔结点皆为红色，父结点变黑，叔叔结点变黑，祖父结点变红，
+		// 祖父结点变红后可能破坏红黑树的红黑性质，以祖父结点为当前结点调整
 		if(u!=NULL&&u->color==0)
 		{
 			parent->color = 1;
 			u->color = 1;
 			g->color = 0;
-			RB_INSERT_FIXUP(T, g);//设祖父结点为当前结点，继续调整
-		}else{//叔叔结点为空或者为黑色
+			RB_INSERT_FIXUP(T, g);// 设祖父结点为当前结点，继续调整
+		}else{// 叔叔结点为空或者为黑色
 
 
 
-			if(parent == g->left){//1. 父结点是祖父结点的左孩子时
-					if(parent->right == z){//a.当前结点是父结点的右子结点：左旋调整到b状态
+			if(parent == g->left){// 1. 父结点是祖父结点的左孩子时
+					if(parent->right == z){// a.当前结点是父结点的右子结点：左旋调整到b状态
 						temp = NULL;
 						temp 	 = LeftRoate(parent);
 						//左旋
@@ -122,15 +139,15 @@ void RB_INSERT_FIXUP(RBNode **T, RBNode *z){
 							g->right = temp;
 							RB_INSERT_FIXUP(T, temp->left);
 						}
-					}else{//b.当前结点是父结点的左子结点：父变黑，祖父变红，右旋即可
+					}else{// b.当前结点是父结点的左子结点：父变黑，祖父变红，右旋即可
 						parent->color = 1;
 						g->color = 0;
 						temp = NULL;
-						gParent = g->parent;//保存祖父结点的父结点
-						temp = RightRoate(g);//保存子树旋转后的根结点
+						gParent = g->parent;// 保存祖父结点的父结点
+						temp = RightRoate(g);// 保存子树旋转后的根结点
 				
 
-						if(gParent!=NULL){//判断是不是到根节点了
+						if(gParent!=NULL){// 判断是不是到根节点了
 							if(gParent->left == g){
 								gParent->left = temp;
 								temp->parent = gParent;
@@ -143,13 +160,13 @@ void RB_INSERT_FIXUP(RBNode **T, RBNode *z){
 							*T = temp;
 						}
 					}
-			}else//2.父结点是祖父结点的右孩子时，与父结点是祖父结点的左孩子对称调整
+			}else// 2.父结点是祖父结点的右孩子时，与父结点是祖父结点的左孩子对称调整
 				{
 					if(z==parent->left){//c).当前结点是父结点的左孩子：先右旋，调整到到d状态
-						//右旋
+						// 以父结点为根结点右旋
 						temp = NULL;
 						temp 	 = RightRoate(parent);
-						//左旋
+						// 以右旋后的当前结点为当前结点继续调整
 						if(g->left == parent){
 							temp->parent = g;
 							g->left = temp;
@@ -160,7 +177,7 @@ void RB_INSERT_FIXUP(RBNode **T, RBNode *z){
 							RB_INSERT_FIXUP(T, temp->right);
 						}
 
-					}else//d).当前结点是父结点的右孩子：父变黑，祖父变红，左旋
+					}else// d).当前结点是父结点的右孩子：父变黑，祖父变红，左旋
 					{
 						parent->color = 1;
 						g->color = 0;
@@ -170,7 +187,7 @@ void RB_INSERT_FIXUP(RBNode **T, RBNode *z){
 						temp = LeftRoate(g);
 
 
-						if(gParent!=NULL){//判断是不是到根节点了
+						if(gParent!=NULL){// 判断是不是到根节点了
 							if(gParent->left == g){
 								gParent->left = temp;
 								temp->parent = gParent;
