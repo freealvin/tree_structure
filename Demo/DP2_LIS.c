@@ -49,7 +49,7 @@ void dealLIS(int arr[], int n)
 	}
 }
 
-int main()
+int main12()
 {
 	int arr[13] = {1,5,8,3,6,7};
 	int i;
