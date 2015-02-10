@@ -171,6 +171,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\AlvinBTree.c"
+				>
+			</File>
+			<File
 				RelativePath=".\BalanceBinaryTree.c"
 				>
 			</File>
@@ -184,6 +188,14 @@
 			</File>
 			<File
 				RelativePath=".\BTree.c"
+				>
+			</File>
+			<File
+				RelativePath=".\DP1.c"
+				>
+			</File>
+			<File
+				RelativePath=".\DP2_LIS.c"
 				>
 			</File>
 			<File
